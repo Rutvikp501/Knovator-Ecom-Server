@@ -1,0 +1,28 @@
+{
+  "name": "knovator-ecom-server",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/Rutvikp501/Knovator-Ecom-Server#readme",
+  "bugs": {
+    "url": "https://github.com/Rutvikp501/Knovator-Ecom-Server/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Rutvikp501/Knovator-Ecom-Server.git"
+  },
+  "license": "ISC",
+  "author": "Rutvik Patil",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "nodemon server.js.js",
+    "dev": "nodemon server.js.js -e html,css,js,ejs"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "mongoose": "^8.18.3",
+    "nodemon": "^3.1.10"
+  }
+}
