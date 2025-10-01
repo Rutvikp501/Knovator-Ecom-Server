@@ -1,10 +1,12 @@
-import { SendOrderDetails } from "../config/sendEmail.js";
-import Order from "../models/Order.model.js";
-import User from "../models/User.model.js";
+import { SendOrderDetails, SendOTP } from "../config/sendEmail.js";
 import { validateOrderData } from "../validators/order.Validator.js";
 
+// YOU CAN REMOVE THIS TO RUN LOCALY WITHOUT ANY DB
+import Order from "../models/Order.model.js";
+import User from "../models/User.model.js";
+
 const orders = [];
-let orderIdCounter = 1;
+let orderId = 1;
 export const placeOrder = async (req, res, next) => {
   try {
     const {
@@ -25,6 +27,8 @@ export const placeOrder = async (req, res, next) => {
         errors: validation.errors,
       });
     }
+
+    // YOU CAN REMOVE THIS TO RUN LOCALY WITHOUT ANY DB
     const existingUser = await User.findOne({ email });
     if (!existingUser) {
       const newUser = await User.create({
@@ -36,19 +40,6 @@ export const placeOrder = async (req, res, next) => {
     }
     const previousOrder = await Order.findOne().sort({ orderId: -1 });
     const orderId = previousOrder ? previousOrder.orderId + 1 : 1;
-    
-    const order = {
-      orderId: orderId,
-      customer: {
-        firstName: firstName.trim(),
-        lastName: lastName.trim(),
-        address: address.trim(),
-      },
-      items: cartItems,
-      totalAmount,
-      orderDate: new Date().toISOString(),
-      status: "Pending",
-    };
 
     const newOrder = await Order.create({
       orderId: orderId,
@@ -71,6 +62,19 @@ export const placeOrder = async (req, res, next) => {
       ],
       orderDate: new Date(),
     });
+    //==============================================================================
+    const order = {
+      orderId: orderId,
+      customer: {
+        firstName: firstName.trim(),
+        lastName: lastName.trim(),
+        address: address.trim(),
+      },
+      items: cartItems,
+      totalAmount,
+      orderDate: new Date().toISOString(),
+      status: "Pending",
+    };
     // Store order (in-memory)
     orders.push(order);
 
@@ -90,7 +94,12 @@ export const placeOrder = async (req, res, next) => {
     });
     console.log(`Order Date: ${order.orderDate}`);
     console.log("======================================\n");
+
+    //YOU CAN REMOVE THIS TO RUN LOCALY WITHOUT ANY DB
+    // Send order details via email
     await SendOrderDetails(email, order);
+    //==============================================================================
+
     // Send success response
     res.status(201).json({
       success: true,
@@ -126,35 +135,34 @@ export const getOrdersByEmail = async (req, res, next) => {
     if (!orders.length) {
       return res.status(404).json({
         success: false,
-        message: "No orders found for this email"
+        message: "No orders found for this email",
       });
     }
     const { user } = orders[0];
-    const userOrders  = orders.map(order => ({
+    const userOrders = orders.map((order) => ({
       orderId: order.orderId,
       products: order.products,
       totalAmount: order.totalAmount,
       status: order.status,
       deliveryLocations: order.deliveryLocations,
-      orderDate: order.orderDate
+      orderDate: order.orderDate,
     }));
 
     const orderData = {
       user: {
         name: user.name,
         email: user.email,
-        phone: user.phone
+        phone: user.phone,
       },
-      orders: userOrders 
+      orders: userOrders,
     };
 
     res.status(200).json({
       success: true,
       count: orders.length,
-      data: orderData
+      data: orderData,
     });
   } catch (error) {
     next(error);
   }
 };
-
