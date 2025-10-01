@@ -1,3 +1,4 @@
+import { SendOrderDetails } from "../config/sendEmail.js";
 import Order from "../models/Order.model.js";
 import User from "../models/User.model.js";
 import { validateOrderData } from "../validators/order.Validator.js";
