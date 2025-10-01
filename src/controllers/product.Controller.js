@@ -2,19 +2,16 @@ import products from "../config/products.js"
 
 export const getAllProducts = (req, res) => {
     try {
-        // You can add query parameters for filtering/sorting here
         const { category, minPrice, maxPrice, sort } = req.query;
         
         let filteredProducts = [...products];
     
-        // Filter by category
         if (category) {
           filteredProducts = filteredProducts.filter(
             p => p.category.toLowerCase() === category.toLowerCase()
           );
         }
-    
-        // Filter by price range
+  
         if (minPrice) {
           filteredProducts = filteredProducts.filter(
             p => p.price >= parseFloat(minPrice)
@@ -25,8 +22,7 @@ export const getAllProducts = (req, res) => {
             p => p.price <= parseFloat(maxPrice)
           );
         }
-    
-        // Sort products
+  
         if (sort) {
           if (sort === 'price-asc') {
             filteredProducts.sort((a, b) => a.price - b.price);

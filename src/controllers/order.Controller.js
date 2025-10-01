@@ -6,8 +6,6 @@ const orders = [];
 let orderIdCounter = 1;
 export const placeOrder = async (req, res, next) => {
   try {
-    console.log(req.body);
-
     const {
       firstName,
       lastName,
@@ -18,7 +16,6 @@ export const placeOrder = async (req, res, next) => {
       totalAmount,
     } = req.body;
 
-    // Validate order data
     const validation = validateOrderData(req.body);
     if (!validation.isValid) {
       return res.status(400).json({
@@ -36,11 +33,8 @@ export const placeOrder = async (req, res, next) => {
         address,
       });
     }
-    // Create order object
-    // Get latest order and increment orderId
     const previousOrder = await Order.findOne().sort({ orderId: -1 });
     const orderId = previousOrder ? previousOrder.orderId + 1 : 1;
-    console.log(previousOrder, orderId);
     
     const order = {
       orderId: orderId,
@@ -99,7 +93,7 @@ export const placeOrder = async (req, res, next) => {
     // Send success response
     res.status(201).json({
       success: true,
-      message: "Order placed successfully! 🎉",
+      message: "Order placed successfully!",
       data: {
         orderId: order.orderId,
         estimatedDelivery: "3-5 business days",
