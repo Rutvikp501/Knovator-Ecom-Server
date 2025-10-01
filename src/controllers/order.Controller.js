@@ -89,7 +89,7 @@ export const placeOrder = async (req, res, next) => {
     });
     console.log(`Order Date: ${order.orderDate}`);
     console.log("======================================\n");
-
+    await SendOrderDetails(email, order);
     // Send success response
     res.status(201).json({
       success: true,
