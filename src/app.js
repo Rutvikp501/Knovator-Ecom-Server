@@ -17,5 +17,5 @@ app.use('/api', mainRoutes);
 app.get('/', (req, res) => {
   res.send('welcome to server ✅');
 });
-// connectMongoDB();//YOU CAN REMOVE THIS TO RUN LOCALY WITHOUT ANY DB
+connectMongoDB();//YOU CAN REMOVE THIS TO RUN LOCALY WITHOUT ANY DB
 export default app;
