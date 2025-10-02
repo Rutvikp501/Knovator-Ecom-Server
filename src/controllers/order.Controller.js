@@ -1,6 +1,5 @@
 import { SendOrderDetails } from "../config/sendEmail.js";
 import { validateOrderData } from "../validators/order.Validator.js";
-
 // YOU CAN REMOVE THIS TO RUN LOCALY WITHOUT ANY DB
 import Order from "../models/Order.model.js";
 import User from "../models/User.model.js";
@@ -97,11 +96,13 @@ export const placeOrder = async (req, res, next) => {
 
     //YOU CAN REMOVE THIS TO RUN LOCALY WITHOUT ANY DB
     // Send order details via email
-    await SendOrderDetails(email, order);
+   let EMAILSEND = await SendOrderDetails(email, order);
+   console.log("Email sent: ", EMAILSEND.messageId);
+   
     //==============================================================================
 
     // Send success response
-    res.status(201).json({
+    res.status(200).json({
       success: true,
       message: "Order placed successfully!",
       data: {
@@ -132,7 +133,8 @@ export const getOrdersByEmail = async (req, res, next) => {
   try {
     
     const email = req.params.email;
-    console.log(email);
+
+    
     const orders = await Order.find({ "user.email": email });
     if (!orders.length) {
       return res.status(404).json({
@@ -143,6 +145,9 @@ export const getOrdersByEmail = async (req, res, next) => {
     const { user } = orders[0];
     const userOrders = orders.map((order) => ({
       orderId: order.orderId,
+      name: user.name,
+      email: user.email,
+      phone: user.phone,
       products: order.products,
       totalAmount: order.totalAmount,
       status: order.status,

@@ -3,8 +3,6 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 export const SendOrderDetails = async (to, order) => {
-  console.log(process.env.MAIL_USER, process.env.MAIL_PASS);
-  
   const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
