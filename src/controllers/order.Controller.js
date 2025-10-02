@@ -130,9 +130,9 @@ export const getAllOrders = async (req, res, next) => {
 
 export const getOrdersByEmail = async (req, res, next) => {
   try {
-    console.log(req.query.email, req.body.email ,req.params.email);
     
-    const email = req.query.email || req.body.email || req.params.email;
+    const email = req.params.email;
+    console.log(email);
     const orders = await Order.find({ "user.email": email });
     if (!orders.length) {
       return res.status(404).json({

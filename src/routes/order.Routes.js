@@ -4,6 +4,6 @@ import { placeOrder, getAllOrders, getOrdersByEmail } from '../controllers/order
 
 router.post('/', placeOrder);
 router.get('/all', getAllOrders); 
-router.get('/user', getOrdersByEmail);
+router.get('/user/:email', getOrdersByEmail);
 
 export default router;
