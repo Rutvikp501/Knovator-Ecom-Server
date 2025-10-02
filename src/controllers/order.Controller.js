@@ -1,4 +1,4 @@
-import { SendOrderDetails, SendOTP } from "../config/sendEmail.js";
+import { SendOrderDetails } from "../config/sendEmail.js";
 import { validateOrderData } from "../validators/order.Validator.js";
 
 // YOU CAN REMOVE THIS TO RUN LOCALY WITHOUT ANY DB
@@ -130,6 +130,8 @@ export const getAllOrders = async (req, res, next) => {
 
 export const getOrdersByEmail = async (req, res, next) => {
   try {
+    console.log(req.query.email, req.body.email ,req.params.email);
+    
     const email = req.query.email || req.body.email || req.params.email;
     const orders = await Order.find({ "user.email": email });
     if (!orders.length) {
@@ -156,6 +158,7 @@ export const getOrdersByEmail = async (req, res, next) => {
       },
       orders: userOrders,
     };
+console.log(orderData);
 
     res.status(200).json({
       success: true,
