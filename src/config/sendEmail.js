@@ -3,14 +3,22 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 export const SendOrderDetails = async (to, order) => {
-  console.log(process.env.MAIL_USER, process.env.MAIL_PASS);
   
   const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
+        service: 'gmail',
+        host: 'smtp.gmail.com',
+        port: 587,
+        auth: {
       user: process.env.MAIL_USER,
       pass: process.env.MAIL_PASS,
     },
+        tls: { rejectUnauthorized: false },
+        debug: true
+    });
+  await transporter.verify().then(() => {
+    console.log('Server is ready to take our messages');
+  }).catch((err) => {
+    console.error('Error with email server configuration:', err);
   });
 
   const itemsHtml = order.items.map(item => `
@@ -36,10 +44,8 @@ export const SendOrderDetails = async (to, order) => {
     subject: `Order Confirmation - Order #${order.orderId}`,
     html: htmlContent,
   };
-  console.log(mailOptions);
 
   const info = await transporter.sendMail(mailOptions);
-  console.log(info);
   
   return info;
 };
