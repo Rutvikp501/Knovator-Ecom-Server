@@ -3,6 +3,8 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 export const SendOrderDetails = async (to, order) => {
+  console.log(process.env.MAIL_USER, process.env.MAIL_PASS);
+  
   const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -11,12 +13,10 @@ export const SendOrderDetails = async (to, order) => {
     },
   });
 
-  // Build order items HTML
   const itemsHtml = order.items.map(item => `
     <li>${item.name} x${item.quantity} = ₹${item.price * item.quantity}</li>
   `).join('');
 
-  // Build email HTML content similar to log
   const htmlContent = `
     <div style="font-family: Arial, sans-serif; line-height: 1.6;">
       <h2>New Order Placed!</h2>
@@ -36,7 +36,10 @@ export const SendOrderDetails = async (to, order) => {
     subject: `Order Confirmation - Order #${order.orderId}`,
     html: htmlContent,
   };
+  console.log(mailOptions);
 
   const info = await transporter.sendMail(mailOptions);
+  console.log(info);
+  
   return info;
 };
