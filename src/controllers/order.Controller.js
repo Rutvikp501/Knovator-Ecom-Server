@@ -96,8 +96,8 @@ export const placeOrder = async (req, res, next) => {
 
     //YOU CAN REMOVE THIS TO RUN LOCALY WITHOUT ANY DB
     // Send order details via email
-   let emailsend = await SendOrderDetails(email, order);
-   console.log("Email sent: ", emailsend.messageId);
+  //  let emailsend = await SendOrderDetails(email, order);
+  //  console.log("Email sent: ", emailsend.messageId);
    
     //==============================================================================
 
